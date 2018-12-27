@@ -12,4 +12,4 @@ mutation = 0.01
 
 population = gen.Population(pop_size, len(target))
 population.initialize_pop()
-print(population.individuals)
+print(population.individuals[1].fitness)
