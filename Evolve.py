@@ -6,9 +6,9 @@ pop_size = int(input('Inform the population size '))
 mutation = float(input('Inform the mutation rate (in %): '))/100"""
 
 # Parameters for the population and it's goal 
-target = 'Joao Pedro'
-pop_size = 100
-mutation = 0.1
+target = 'Puta que pariu'
+pop_size = 400
+mutation = 0.01
 
 population = gen.Population(pop_size, target, len(target), mutation)
 
