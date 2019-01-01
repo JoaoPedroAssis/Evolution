@@ -6,7 +6,7 @@ pop_size = int(input('Inform the population size '))
 mutation = float(input('Inform the mutation rate (in %): '))/100"""
 
 # Parameters for the population and it's goal 
-target = 'Puta que pariu'
+target ='Feliz ano novo'
 pop_size = 400
 mutation = 0.01
 

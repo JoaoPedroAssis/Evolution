@@ -20,7 +20,7 @@ class Specimen:
         for i in range(len(target)):
             if self.phrase[i] == target[i]:
                 score += 1
-        self.fitness = score**2
+        self.fitness = score**4
 
 class Population:
     def __init__ (self, pop_size, target, target_len, mutation):
