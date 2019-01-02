@@ -7,7 +7,7 @@ class Specimen:
         # Generates random string with the same length of the target 
         self.phrase = ''.join(random.choices(string.ascii_letters +
          ' ', k=len))
-        # Initialize the fitness 
+        # Initialize the fitness and probability 
         self.fitness = -1
         self.probability = 0
     
@@ -15,11 +15,15 @@ class Specimen:
         return self.fitness < other.fitness
     
     def calculate_fitness(self, target):
-        #self.fitness = (int((SequenceMatcher(None, self.phrase, target).ratio())*100))**2
+        
+        # Calculates the number of correct letters in
+        # a given position
         score = 0
         for i in range(len(target)):
             if self.phrase[i] == target[i]:
                 score += 1
+        # Raises to fourth power so a little step in the
+        # score means a big step in the fitness
         self.fitness = score**4
 
     def register(self, arq):
@@ -76,90 +80,40 @@ class Population:
         return self.individuals[index].phrase
 
     def reproduction(self):
-
+        # For each individual, select two parents and mate them
         for individual in self.individuals:
             father = self.pick_one()
             mother = self.pick_one()
             child = crossing_over(father, mother, self.target)
-            '''if self.mutation > random.uniform(0,1):
-                #print('passou')
-                rand = random.randint(0, len(self.target))
-                letter = random.choice(string.ascii_letters)
-                # print(rand)
-                child.replace(individual.phrase[rand-1], letter, 1)'''
+            # Mutate the child according to the mutation rate
             new_child = self.mutate(child)
             individual.phrase = new_child
 
         self.generations += 1
 
     def best_one(self):
-        
+        # Returns the best specimen of the population
         max_index = self.individuals.index(max(self.individuals))
         return self.individuals[max_index].phrase
 
-    def got_to_target(self):
-
+    '''def got_to_target(self):
+        # Checks if the best 
         best_one = self.best_one()
         if best_one == self.target:
             return True
         else:
-            return False
+            return False'''
 
     def mutate(self, child):
-
-        '''mut = int(100*self.mutation)
-        for i in range(mut):
-            chosen = random.choice(self.individuals)
-            rand = random.randint(1,self.target_len)
-            letter = random.choice(string.ascii_letters + ' ')
-            chosen.phrase = chosen.phrase.replace(chosen.phrase[rand-1], letter, 1)'''
+        # According to the mutation rate, randomly
+        # switch a character
         for char in child:
             if random.uniform(0,1) < self.mutation:
                 child = child.replace(char, random.choice(string.ascii_letters + ' '), 1)
         return child
 
 def crossing_over(father, mother, target):
-    
+    # Gets the half of the fathers genes and combine
+    # with half of the mothers
     length = int(len(father)/2)    
-    '''rand_f = random.randint(1,2)
-    rand_m = random.randint(1,2)
-
-    if rand_f == 1:
-        crop_f = father[:length]
-    else:
-        crop_f = father[length:]
-
-    if rand_m == 1:
-        crop_m = mother[:length]
-    else:
-        crop_m = mother[length:]
-
-    return crop_f + crop_m'''
-    #best_father = best(father, target)
-    #best_mother = best(mother, target)
-
     return father[:length] + mother[length:]
-
-def best(parent, target):
-
-    length = int(len(target)/2)
-
-    f1 = parent[:length]
-    f2 = parent[length:]
-
-    c1 = alike(target, f1)
-    c2 = alike(target, f2)
-
-    if c1 >= c2:
-        return f1
-    else:
-        return f2
-
-def alike(a,b):
-    
-    alikeness = 0
-    for char in b:
-        if char in a:
-            alikeness += 1
-
-    return alikeness
