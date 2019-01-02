@@ -22,6 +22,9 @@ class Specimen:
                 score += 1
         self.fitness = score**4
 
+    def register(self, arq):
+        arq.write(self.phrase + '\n')
+
 class Population:
     def __init__ (self, pop_size, target, target_len, mutation):
         self.pop_size = pop_size
@@ -35,13 +38,20 @@ class Population:
             individual = Specimen(self.target_len)
             # Append the individuals to the population
             self.individuals.append(individual)
+        
+        self.generations = 1
 
     def fitness(self):
         # Evaluate the fitness of the entire population
+        arq = open('All_Phrases.txt', 'a')
+        arq.write('\n---------- Generation {} ----------\n'.format(self.generations))
         for individual in self.individuals:
             individual.calculate_fitness(self.target)
+            individual.register(arq)
 
+        arq.close()
         self.probability()
+        
 
     def probability(self):
         # Calculate the probability of a specimen being
@@ -80,14 +90,16 @@ class Population:
             new_child = self.mutate(child)
             individual.phrase = new_child
 
+        self.generations += 1
+
     def best_one(self):
         
         max_index = self.individuals.index(max(self.individuals))
-        return self.individuals[max_index].phrase, self.individuals[max_index].fitness
+        return self.individuals[max_index].phrase
 
     def got_to_target(self):
 
-        best_one,_ = self.best_one()
+        best_one = self.best_one()
         if best_one == self.target:
             return True
         else:
